@@ -14,7 +14,6 @@
             brand: {
               50: '#eff6ff',
               100: '#dbeafe',
-              400: '#60a5fa',
               500: '#3b82f6',
               600: '#2563eb',
               700: '#1d4ed8',
@@ -26,77 +25,483 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     canvas { display: block; }
     .glass {
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
-    .dark .glass {
-      background: rgba(15, 23, 42, 0.75);
+    .light .glass {
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
     }
   </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300 font-sans flex flex-col">
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300 font-sans flex flex-col">
 
-  <div class="relative overflow-hidden bg-gradient-to-b from-blue-900 via-brand-900 to-slate-950 text-white border-b border-blue-800/40">
-    <canvas id="calcCanvas" class="absolute inset-0 w-full h-full opacity-30 pointer-events-auto"></canvas>
+  <!-- Interactive Hero Header -->
+  <header id="heroContainer" class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-brand-900 to-slate-950 text-white border-b border-blue-800/40 select-none">
+    <canvas id="calcCanvas" class="absolute inset-0 w-full h-full opacity-40 pointer-events-none"></canvas>
     
-    <header class="relative max-w-7xl mx-auto px-6 py-12 z-10">
+    <div class="relative max-w-7xl mx-auto px-6 py-10 z-10">
       <div class="flex justify-between items-center mb-6">
         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-400/30">
-          <i class="fa-solid fa-graduation-cap"></i> AP Calculus BC &amp; Multivariable
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+          AP Calculus BC &amp; Multivariable
         </span>
-        <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition">
-          <i class="fa-solid fa-sun text-amber-400 dark:hidden"></i>
-          <i class="fa-solid fa-moon text-blue-400 hidden dark:block"></i>
+
+        <!-- Theme Toggle Button -->
+        <button id="themeToggle" type="button" aria-label="Toggle Theme" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 transition cursor-pointer text-amber-400 dark:text-blue-400">
+          <!-- Sun Icon (shown in dark mode) -->
+          <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <!-- Moon Icon (shown in light mode) -->
+          <svg id="moonIcon" class="w-5 h-5 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
       </div>
 
       <div class="max-w-3xl">
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-blue-100 to-blue-300 bg-clip-text text-transparent mb-4">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-blue-100 to-blue-300 bg-clip-text text-transparent mb-3">
           HSCalculusNotes
         </h1>
-        <p class="text-lg text-blue-200/90 leading-relaxed font-light">
+        <p class="text-base sm:text-lg text-blue-200/90 leading-relaxed font-light">
           Guhan Gargya's High School Calculus Notes archive covering <strong class="text-white font-medium">U1–10 (AP Calculus BC)</strong> and upcoming <strong class="text-white font-medium">U11+ (Multivariable Calculus)</strong>.
         </p>
       </div>
 
-      <div class="mt-8 glass rounded-2xl p-4 border border-blue-500/20 max-w-xl text-xs sm:text-sm text-slate-200 flex items-center justify-between gap-4">
+      <!-- Interactive Widget Box -->
+      <div class="mt-6 glass rounded-2xl p-4 border border-blue-400/20 max-w-xl text-xs sm:text-sm text-slate-200 flex items-center justify-between gap-4 shadow-lg">
         <div class="flex items-center gap-3">
           <div class="p-2.5 bg-blue-600/30 rounded-xl text-blue-300 border border-blue-400/30">
-            <i class="fa-solid fa-chart-line text-lg"></i>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18"/></svg>
           </div>
           <div>
             <div class="font-bold text-white">Interactive Tangent Line Engine</div>
-            <div class="text-blue-200/70">Move mouse over top canvas to inspect $f(x)$ &amp; derivative $f'(x)$.</div>
+            <div class="text-blue-200/80 text-xs">Hover cursor over top header to inspect real-time derivative slope f'(x).</div>
           </div>
         </div>
-        <div id="mathStats" class="font-mono text-right text-blue-300 hidden sm:block">
-          f(x) = sin(x)<br>f'(x) = cos(x)
+        <div id="mathStats" class="font-mono text-right text-blue-300 font-semibold leading-tight">
+          f(x) = sin(x)<br><span class="text-rose-400">f'(x) = cos(x)</span>
         </div>
       </div>
-    </header>
-  </div>
+    </div>
+  </header>
 
-  <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full">
+  <!-- Main Content Area -->
+  <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full">
 
-    <div class="flex flex-col md:flex-row gap-4 justify-between items-center mb-8">
-      <div class="relative w-full md:w-96">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+    <!-- Search & Control Bar -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
+      <div class="relative w-full sm:w-96">
+        <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         <input type="text" id="searchInput" placeholder="Search topics (e.g. Chain Rule, Taylor, Shells)..." 
-               class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm transition">
+               class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm transition text-sm">
       </div>
-      <div class="flex items-center gap-2 w-full md:w-auto">
-        <button id="expandAllBtn" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button id="expandAllBtn" type="button" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
           Expand All
         </button>
-        <button id="collapseAllBtn" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+        <button id="collapseAllBtn" type="button" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
           Collapse All
         </button>
       </div>
     </div>
 
-    <div class="mb-8 p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900
+    <!-- Notes Disclaimer -->
+    <div class="mb-6 p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-start gap-3">
+      <svg class="w-5 h-5 text-brand-600 dark:text-brand-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <div class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        <strong>Formatting Note:</strong> Formatting is not perfectly enforced, particularly in Unit 1. Multivariable Calculus (Calc III) notes will be uploaded dynamically as coursework completes.
+      </div>
+    </div>
+
+    <!-- Dynamic Units List -->
+    <div id="unitsContainer" class="space-y-4"></div>
+
+  </main>
+
+  <!-- PDF View Modal -->
+  <div id="pdfModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/></svg>
+          <h3 id="modalTitle" class="font-bold text-slate-800 dark:text-slate-100 text-sm sm:text-base truncate">Document Viewer</h3>
+        </div>
+        <div class="flex items-center gap-3">
+          <a id="modalDownload" href="#" download class="px-3 py-1.5 text-xs font-medium rounded-lg bg-brand-600 hover:bg-brand-700 text-white transition flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download
+          </a>
+          <button id="closeModalBtn" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+      <iframe id="pdfFrame" class="w-full flex-grow border-none" src=""></iframe>
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+    HSCalculusNotes &bull; Maintained by Guhan Gargya
+  </footer>
+
+  <script>
+    // Exact structure matching your local folder contents
+    const calculusData = [
+      {
+        unit: "Calc BC - U1 - Limits",
+        title: "Unit 1: Limits & Continuity",
+        badge: "AP Calc BC",
+        color: "from-blue-600 to-indigo-600",
+        files: [
+          "Continuity.pdf",
+          "Definition of a Derivative.pdf",
+          "Differentiability.pdf",
+          "Limits & Asymptote.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U2 - Derivatives",
+        title: "Unit 2: Derivative Fundamentals",
+        badge: "AP Calc BC",
+        color: "from-blue-600 to-sky-600",
+        files: [
+          "Basic Derivative Rules.pdf",
+          "Basic Trig Rules.pdf",
+          "Chain Rule.pdf",
+          "Implicit Differentiation.pdf",
+          "More Trig Rules.pdf",
+          "Product & Quotient Rule.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U3 - Apply Derivatives",
+        title: "Unit 3: Contextual Applications of Derivatives",
+        badge: "AP Calc BC",
+        color: "from-sky-600 to-cyan-600",
+        files: [
+          "2nd Derivative Test Cont..pdf",
+          "Concavity.pdf",
+          "Extrema on an Interval.pdf",
+          "Incr., Decr., Local Extrema.pdf",
+          "Rolle_s and MVT.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U4 - Integration",
+        title: "Unit 4: Integration & Antiderivatives",
+        badge: "AP Calc BC",
+        color: "from-cyan-600 to-teal-600",
+        files: [
+          "2nd FTC.pdf",
+          "Antiderivatives.pdf",
+          "Fundamental Theorem.pdf",
+          "Indefinite Integrals.pdf",
+          "U Substitution.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U5 - Transcendentals",
+        title: "Unit 5: Transcendental Functions",
+        badge: "AP Calc BC",
+        color: "from-teal-600 to-blue-600",
+        files: [
+          "Anti-Derivatives of Inverse Trig.pdf",
+          "Deriv and Anti-Deriv. of e.pdf",
+          "Derivatives of inverse Trig.pdf",
+          "Derivatives of Ln(x).pdf",
+          "Integration with Ln.pdf",
+          "Logarithmic Differentiation.pdf",
+          "Trig with Ln and e.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U6 - Diff EQs",
+        title: "Unit 6: Differential Equations",
+        badge: "AP Calc BC",
+        color: "from-blue-700 to-indigo-700",
+        files: [
+          "Diff EQ.pdf",
+          "Euler_s Method.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U7 - Apply Integrals",
+        title: "Unit 7: Applications of Integration",
+        badge: "AP Calc BC",
+        color: "from-indigo-600 to-blue-600",
+        files: [
+          "AREA.pdf",
+          "Volume by Cross Section.pdf",
+          "Volume By Rotation.pdf",
+          "Volume Using Shells.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U8 - Intergal Tech",
+        title: "Unit 8: Advanced Integration Techniques",
+        badge: "AP Calc BC",
+        color: "from-blue-600 to-brand-600",
+        files: [
+          "Improper Integrals.pdf",
+          "Integration By Parts.pdf",
+          "L_Hopital_s Rule.pdf",
+          "Partial Fractions.pdf",
+          "Trig Integration.pdf",
+          "Trig Substitution.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U9 - Infinite Series",
+        title: "Unit 9: Sequences & Infinite Series",
+        badge: "AP Calc BC",
+        color: "from-brand-600 to-indigo-800",
+        files: [
+          "Power Series.pdf",
+          "Sequences.pdf",
+          "Series.pdf",
+          "Taylor Polynomial.pdf"
+        ]
+      },
+      {
+        unit: "Calc BC - U10 - Parametrics",
+        title: "Unit 10: Parametric, Vector & Polar",
+        badge: "AP Calc BC",
+        color: "from-indigo-800 to-blue-900",
+        files: [
+          "Parametrics.pdf",
+          "Polar Area.pdf"
+        ]
+      },
+      {
+        unit: "Calc III - U11+ - Multivariable",
+        title: "Unit 11+: Multivariable Calculus Honors",
+        badge: "12th Grade (In Progress)",
+        color: "from-purple-700 to-blue-800",
+        files: []
+      }
+    ];
+
+    // Theme Switcher
+    const htmlEl = document.documentElement;
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      htmlEl.classList.toggle('dark');
+    });
+
+    // Render Unit Cards
+    const container = document.getElementById('unitsContainer');
+
+    function renderUnits(filter = '') {
+      container.innerHTML = '';
+      
+      calculusData.forEach((u, index) => {
+        const matchingFiles = u.files.filter(f => f.toLowerCase().includes(filter.toLowerCase()));
+        if (filter && matchingFiles.length === 0 && !u.title.toLowerCase().includes(filter.toLowerCase())) {
+          return;
+        }
+
+        const filesToDisplay = filter ? matchingFiles : u.files;
+        const isUpcoming = u.files.length === 0;
+
+        const card = document.createElement('div');
+        card.className = "bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-all duration-200";
+
+        let filesMarkup = '';
+        if (isUpcoming) {
+          filesMarkup = `
+            <div class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
+              Multivariable notes will be uploaded dynamically as coursework completes.
+            </div>`;
+        } else {
+          filesMarkup = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">`;
+          filesToDisplay.forEach(file => {
+            const relPath = `./${encodeURIComponent(u.unit)}/${encodeURIComponent(file)}`;
+            filesMarkup += `
+              <div class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800/80 hover:border-brand-500 dark:hover:border-brand-500 bg-slate-50/50 dark:bg-slate-950/40 hover:shadow-sm transition">
+                <div class="flex items-center gap-2.5 overflow-hidden">
+                  <svg class="w-5 h-5 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/></svg>
+                  <span class="text-xs font-medium text-slate-700 dark:text-slate-200 truncate">${file.replace('.pdf', '')}</span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                  <button type="button" data-action="preview" data-path="${relPath}" data-name="${file}" class="p-1.5 text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 transition" title="Preview PDF">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  </button>
+                  <a href="${relPath}" download class="p-1.5 text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 transition" title="Download">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                  </a>
+                </div>
+              </div>`;
+          });
+          filesMarkup += `</div>`;
+        }
+
+        card.innerHTML = `
+          <button type="button" data-action="toggle" data-target="unit-${index}" class="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/40 transition">
+            <div class="flex items-center gap-3.5">
+              <div class="w-2 h-10 rounded-full bg-gradient-to-b ${u.color}"></div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="font-bold text-sm sm:text-base text-slate-900 dark:text-slate-100">${u.title}</h2>
+                  <span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">${u.badge}</span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">${u.unit}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-200/60 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hidden sm:inline-block">
+                ${isUpcoming ? 'In Progress' : filesToDisplay.length + ' PDFs'}
+              </span>
+              <svg class="chevron-icon w-5 h-5 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </button>
+          <div id="unit-${index}" class="accordion-content ${filter ? '' : 'hidden'} border-t border-slate-100 dark:border-slate-800/60 p-4 sm:p-5 bg-white dark:bg-slate-900">
+            ${filesMarkup}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    renderUnits();
+
+    // Event Delegation for Accordion Toggles & PDF Previews
+    container.addEventListener('click', (e) => {
+      const toggleBtn = e.target.closest('[data-action="toggle"]');
+      if (toggleBtn) {
+        const targetId = toggleBtn.getAttribute('data-target');
+        const content = document.getElementById(targetId);
+        const chevron = toggleBtn.querySelector('.chevron-icon');
+        if (content) content.classList.toggle('hidden');
+        if (chevron) chevron.classList.toggle('rotate-180');
+        return;
+      }
+
+      const previewBtn = e.target.closest('[data-action="preview"]');
+      if (previewBtn) {
+        const path = previewBtn.getAttribute('data-path');
+        const name = previewBtn.getAttribute('data-name');
+        openPdfModal(path, name);
+      }
+    });
+
+    // Expand / Collapse Controls
+    document.getElementById('expandAllBtn').addEventListener('click', () => {
+      document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('hidden'));
+      document.querySelectorAll('.chevron-icon').forEach(i => i.classList.add('rotate-180'));
+    });
+
+    document.getElementById('collapseAllBtn').addEventListener('click', () => {
+      document.querySelectorAll('.accordion-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll('.chevron-icon').forEach(i => i.classList.remove('rotate-180'));
+    });
+
+    // Dynamic Filter Search
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      renderUnits(e.target.value);
+    });
+
+    // PDF Modal Controls
+    const modal = document.getElementById('pdfModal');
+    const modalFrame = document.getElementById('pdfFrame');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDownload = document.getElementById('modalDownload');
+
+    function openPdfModal(path, name) {
+      modalTitle.innerText = name;
+      modalFrame.src = path;
+      modalDownload.href = path;
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      modalFrame.src = '';
+    }
+
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Canvas Engine
+    const heroContainer = document.getElementById('heroContainer');
+    const canvas = document.getElementById('calcCanvas');
+    const ctx = canvas.getContext('2d');
+    let mouseX = 200;
+
+    function resizeCanvas() {
+      canvas.width = heroContainer.offsetWidth;
+      canvas.height = heroContainer.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    heroContainer.addEventListener('mousemove', (e) => {
+      const rect = heroContainer.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+    });
+
+    function drawCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerY = height / 2;
+
+      // Subtle Background Grid
+      ctx.strokeStyle = 'rgba(96, 165, 250, 0.08)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < width; x += 35) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+
+      // Sine Wave f(x) = sin(x)
+      ctx.beginPath();
+      ctx.strokeStyle = '#60a5fa';
+      ctx.lineWidth = 3;
+
+      const scaleX = 0.015;
+      const scaleY = Math.min(50, height / 3);
+
+      for (let x = 0; x < width; x++) {
+        const y = centerY - Math.sin(x * scaleX) * scaleY;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Dynamic Tangent Line f'(x)
+      const xVal = mouseX * scaleX;
+      const yPoint = centerY - Math.sin(xVal) * scaleY;
+      const slope = -Math.cos(xVal) * scaleY * scaleX;
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2.5;
+      const tanLength = 80;
+      ctx.moveTo(mouseX - tanLength, yPoint - slope * tanLength);
+      ctx.lineTo(mouseX + tanLength, yPoint + slope * tanLength);
+      ctx.stroke();
+
+      // Point of tangency
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(mouseX, yPoint, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Update HUD stats
+      const mathStats = document.getElementById('mathStats');
+      if (mathStats) {
+        mathStats.innerHTML = `f(${(xVal).toFixed(1)}) = ${Math.sin(xVal).toFixed(2)}<br><span class="text-rose-400">f'(${(xVal).toFixed(1)}) = ${Math.cos(xVal).toFixed(2)}</span>`;
+      }
+
+      requestAnimationFrame(drawCanvas);
+    }
+
+    drawCanvas();
+  </script>
+</body>
+</html>
