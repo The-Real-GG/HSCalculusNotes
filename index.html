@@ -53,9 +53,7 @@
 
         <!-- Theme Toggle Button -->
         <button id="themeToggle" type="button" aria-label="Toggle Theme" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 transition cursor-pointer text-amber-400 dark:text-blue-400">
-          <!-- Sun Icon (shown in dark mode) -->
           <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-          <!-- Moon Icon (shown in light mode) -->
           <svg id="moonIcon" class="w-5 h-5 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
       </div>
@@ -65,7 +63,7 @@
           HSCalculusNotes
         </h1>
         <p class="text-base sm:text-lg text-blue-200/90 leading-relaxed font-light">
-          Guhan Gargya's High School Calculus Notes archive covering <strong class="text-white font-medium">U1–10 (AP Calculus BC)</strong> and upcoming <strong class="text-white font-medium">U11+ (Multivariable Calculus)</strong>.
+          Guhan Gargya's High School Calculus Notes archive covering <strong class="text-white font-medium">U1–10 (AP Calculus BC)</strong> and <strong class="text-white font-medium">U11+ (Multivariable Calculus)</strong>.
         </p>
       </div>
 
@@ -94,7 +92,7 @@
     <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
       <div class="relative w-full sm:w-96">
         <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input type="text" id="searchInput" placeholder="Search topics (e.g. Chain Rule, Taylor, Shells)..." 
+        <input type="text" id="searchInput" placeholder="Search topics (e.g. Cross Product, Chain Rule, Taylor)..." 
                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm transition text-sm">
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -146,7 +144,6 @@
   </footer>
 
   <script>
-    // Exact structure matching your local folder contents
     const calculusData = [
       {
         unit: "Calc BC - U1 - Limits",
@@ -274,10 +271,26 @@
         ]
       },
       {
-        unit: "Calc III - U11+ - Multivariable",
-        title: "Unit 11+: Multivariable Calculus Honors",
-        badge: "12th Grade (In Progress)",
+        unit: "Multi - U11 - Vectors in Space",
+        title: "Unit 11: Vectors in Space",
+        badge: "Multivariable Calc",
         color: "from-purple-700 to-blue-800",
+        files: [
+          "Application of Vectors.pdf",
+          "Cross Product.pdf",
+          "Cylindrical and Spherical Coordinates.pdf",
+          "Dot Product.pdf",
+          "Lines and Planes in Space.pdf",
+          "Space Coordinates.pdf",
+          "Surfaces in Space.pdf",
+          "Vectors in a Plane.pdf"
+        ]
+      },
+      {
+        unit: "Calc III - U12+ - Multivariable",
+        title: "Unit 12+: Multivariable Calculus Honors",
+        badge: "12th Grade (In Progress)",
+        color: "from-indigo-900 to-purple-900",
         files: []
       }
     ];
@@ -310,7 +323,7 @@
         if (isUpcoming) {
           filesMarkup = `
             <div class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
-              Multivariable notes will be uploaded dynamically as coursework completes.
+              Upcoming Multivariable notes will be uploaded dynamically as coursework completes.
             </div>`;
         } else {
           filesMarkup = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">`;
